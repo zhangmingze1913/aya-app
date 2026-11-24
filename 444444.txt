@@ -1,0 +1,6 @@
+git init
+git add .
+git commit -m "Initial aya-app 0.3.1"
+git branch -M main
+git remote add origin https://github.com/zhangmingze1319/aya-app
+git push -u origin main
