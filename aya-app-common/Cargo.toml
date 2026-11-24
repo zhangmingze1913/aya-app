@@ -1,0 +1,20 @@
+[package]
+name = "aya-app-common"
+description = "Shared ABI types and constants for the aya-app eBPF programs and CLI"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+# Only needed for the `Pod` implementations used by the userspace side. The
+# eBPF crate compiles this crate with `default-features = false`-equivalent
+# behaviour (the feature is simply off), so it stays `no_std` and does not pull
+# in `aya`'s userspace dependencies.
+aya = { workspace = true, optional = true }
+
+[features]
+# Enable the userspace-only `aya::Pod` implementations. `aya-app` enables it;
+# `aya-app-ebpf` must not.
+user = ["dep:aya"]

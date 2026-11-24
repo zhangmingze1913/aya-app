@@ -1,0 +1,60 @@
+[package]
+name = "aya-app-ebpf"
+description = "eBPF programs for aya-app: XDP, TC, kprobe, uprobe, tracepoint, socket, LSM, fentry, raw tracepoint and cgroup"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+autobins = false
+
+[dependencies]
+aya-app-common = { path = "../aya-app-common" }
+aya-ebpf = { workspace = true }
+
+# One bin per scenario. `aya-build` builds all of them in a single Cargo
+# invocation (`--bins`), which is faster than 11 separate feature builds and
+# keeps each object scoped to one scenario's maps/programs.
+[[bin]]
+name = "xdp"
+path = "src/bin/xdp.rs"
+
+[[bin]]
+name = "tc"
+path = "src/bin/tc.rs"
+
+[[bin]]
+name = "kprobe"
+path = "src/bin/kprobe.rs"
+
+[[bin]]
+name = "uprobe"
+path = "src/bin/uprobe.rs"
+
+[[bin]]
+name = "tracepoint"
+path = "src/bin/tracepoint.rs"
+
+[[bin]]
+name = "socket"
+path = "src/bin/socket.rs"
+
+[[bin]]
+name = "lsm"
+path = "src/bin/lsm.rs"
+
+[[bin]]
+name = "fentry"
+path = "src/bin/fentry.rs"
+
+[[bin]]
+name = "raw_tp"
+path = "src/bin/raw_tp.rs"
+
+[[bin]]
+name = "cgroup_skb"
+path = "src/bin/cgroup_skb.rs"
+
+[[bin]]
+name = "cgroup_sysctl"
+path = "src/bin/cgroup_sysctl.rs"

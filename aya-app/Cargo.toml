@@ -1,0 +1,27 @@
+[package]
+name = "aya-app"
+description = "Aya eBPF toolkit: XDP, TC, kprobe, uprobe, tracepoint, socket, LSM, fentry, raw tracepoint and cgroup programs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+aya-app-common = { path = "../aya-app-common", features = ["user"] }
+
+anyhow = { workspace = true }
+aya = { workspace = true }
+clap = { workspace = true }
+env_logger = { workspace = true }
+libc = { workspace = true }
+log = { workspace = true }
+tokio = { workspace = true }
+
+[build-dependencies]
+anyhow = { workspace = true }
+aya-build = { workspace = true }
+
+[[bin]]
+name = "aya-app"
+path = "src/main.rs"

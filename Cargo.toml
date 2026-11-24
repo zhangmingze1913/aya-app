@@ -1,0 +1,55 @@
+[workspace]
+resolver = "3"
+members = [
+    "aya-app",
+    "aya-app-common",
+    "aya-app-demo",
+    "aya-app-ebpf",
+]
+# `cargo build` / `cargo check` only build the userspace side by default. The
+# eBPF crate is cross-compiled for `bpfel-unknown-none` by the build script of
+# `aya-app`, so it must not be built for the host by default.
+default-members = ["aya-app", "aya-app-common", "aya-app-demo"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.98"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/example/aya-app"
+
+[workspace.dependencies]
+# Userspace eBPF loader. `aya` is Linux-only and deliberately does not pull in
+# a runtime: we drive it from Tokio.
+aya = { version = "0.16.0", default-features = false }
+# Build helper invoked by `aya-app/build.rs`; it shells out to Cargo with the
+# nightly toolchain and `-Z build-std=core` to produce the BPF object.
+aya-build = { version = "0.2.1", default-features = false }
+# eBPF-side runtime and program/map macros.
+aya-ebpf = { version = "0.3.0", default-features = false }
+
+anyhow = "1"
+clap = { version = "4.5", features = ["derive"] }
+env_logger = { version = "0.11", default-features = false, features = ["auto-color", "humantime"] }
+libc = "0.2"
+log = "0.4"
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+    "signal",
+    "time",
+    "net",
+    "io-util",
+] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
+# Keep DWARF and BTF-friendly code generation for the BPF object. `aya-build`
+# supplies `-C debuginfo=2`; these settings make the object deterministic and
+# easy to inspect with bpftool/llvm-objdump.
+[profile.release.package.aya-app-ebpf]
+debug = 2
+codegen-units = 1
+strip = false
