@@ -35,9 +35,22 @@ fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT HUP INT TERM
 
+fetch() {
+    url="$1"
+    out="$2"
+    if command -v curl >/dev/null 2>&1; then
+        curl -fL --retry 3 --max-time 180 -o "$out" "$url"
+    elif command -v wget >/dev/null 2>&1; then
+        wget -q -O "$out" "$url"
+    else
+        echo "curl or wget is required" >&2
+        exit 1
+    fi
+}
+
 echo "==> downloading $VERSION from $REPO"
-curl -fL --retry 3 --max-time 180 -o "$TMP/aya-app" "$BASE/aya-app"
-curl -fL --retry 3 --max-time 60 -o "$TMP/SHA256SUMS" "$BASE/SHA256SUMS"
+fetch "$BASE/aya-app" "$TMP/aya-app"
+fetch "$BASE/SHA256SUMS" "$TMP/SHA256SUMS"
 
 EXPECTED="$(awk '$2 == "aya-app" { print $1 }' "$TMP/SHA256SUMS")"
 if [ -z "$EXPECTED" ]; then

@@ -5,7 +5,7 @@
 | 架构 | 状态 | 说明 |
 |---|---|---|
 | `x86_64` | ✅ | QEMU/Alpine 6.1/6.6/6.18；eBPF 对象与运行时均已验证 |
-| `aarch64` | ⚠️ 未验证 | 代码可构建，但 syscall/tracepoint 假设需要检查 |
+| `aarch64` | ⚠️ 仅交叉编译 | `cargo check -p aya-app --target aarch64-unknown-linux-gnu` 通过；未实机运行 |
 
 ## aarch64 注意事项
 

@@ -74,11 +74,15 @@ sudo ./aya-app --help
 
 - CLI 集成测试：`aya-app/tests/cli.rs`（CI 中运行）；
 - `deny.toml` + CI `cargo-deny` job；本地 `cargo deny check` 通过；
+- `cargo audit` 本地通过（0 vulnerabilities），CI 增加 audit job；
 - Release 安装脚本：`scripts/install.sh`，已在 Alpine 3.24 上安装
   `v0.1.0` 并校验 SHA-256；
-- 非 x86_64 说明：`docs/architectures.md`；
+- 非 x86_64 说明：`docs/architectures.md`；aarch64 `cargo check` 已通过，
+  仍未实机运行；
 - 特权运行时：`scripts/test-linux-runtime.sh` + `runtime.yml`；
   在 Alpine 6.18 上得到 `pass=5 fail=0`（XDP/kprobe/raw-tp/fentry/LSM）；
+- Dependabot：Cargo + GitHub Actions 周更新；
+- 安装脚本支持 curl/wget；
 - QEMU TCG 数据已标注为非生产基准。
 
 仍可继续：

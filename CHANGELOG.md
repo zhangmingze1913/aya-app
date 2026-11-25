@@ -9,7 +9,9 @@ All notable changes to this project are documented here.
 - CLI integration tests for help/version and early argument validation.
 - `scripts/install.sh` with SHA-256 verification.
 - `deny.toml` for `cargo deny`.
-- Non-x86_64 architecture notes.
+- `cargo audit` and `cargo deny` CI jobs.
+- Dependabot for Cargo and GitHub Actions.
+- Non-x86_64 architecture notes (aarch64 cross-check only).
 - Privileged runtime smoke script and self-hosted workflow.
 
 ## [0.1.0] - 2026-11-25
