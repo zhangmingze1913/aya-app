@@ -70,21 +70,22 @@ sudo ./aya-app --help
 
 ## 5. 后续 P2
 
-本轮已补充：
+本轮已补充并验证：
 
-- CLI 集成测试：`aya-app/tests/cli.rs`；
-- `deny.toml` + `cargo deny check` 使用说明；
-- Release 安装脚本：`scripts/install.sh`；
+- CLI 集成测试：`aya-app/tests/cli.rs`（CI 中运行）；
+- `deny.toml` + CI `cargo-deny` job；本地 `cargo deny check` 通过；
+- Release 安装脚本：`scripts/install.sh`，已在 Alpine 3.24 上安装
+  `v0.1.0` 并校验 SHA-256；
 - 非 x86_64 说明：`docs/architectures.md`；
-- 特权运行时入口：`scripts/test-linux-runtime.sh` + `runtime.yml`；
+- 特权运行时：`scripts/test-linux-runtime.sh` + `runtime.yml`；
+  在 Alpine 6.18 上得到 `pass=5 fail=0`（XDP/kprobe/raw-tp/fentry/LSM）；
 - QEMU TCG 数据已标注为非生产基准。
 
 仍可继续：
 
-- `cargo audit` / `cargo deny` 纳入托管 CI；
-- Release 安装脚本的更多平台/包管理器支持；
 - 非 x86_64 实机验证；
-- 特权 runner/netns 的自动化矩阵。
+- 特权 runner/netns 的自动化矩阵；
+- 安装脚本的包管理器支持。
 
 ## 6. 最终判断
 

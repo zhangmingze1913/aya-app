@@ -9,6 +9,17 @@ permissions:
   contents: read
 
 jobs:
+  security:
+    name: cargo-deny
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: EmbarkStudios/cargo-deny-action@v2
+        with:
+          command: check
+          arguments: --all-features
+
   linux:
     name: Linux ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
