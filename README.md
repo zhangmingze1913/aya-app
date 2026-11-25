@@ -581,4 +581,4 @@ cargo clippy -p aya-app \
 
 ## 10. 许可
 
-MIT OR Apache-2.0。示例代码用于教学与实验；在生产环境使用前请完成权限、最小化挂载范围、回滚与监控设计。
+[MIT](LICENSE-MIT) OR [Apache-2.0](LICENSE-APACHE)。示例代码用于教学与实验；在生产环境使用前请完成权限、最小化挂载范围、回滚与监控设计。
