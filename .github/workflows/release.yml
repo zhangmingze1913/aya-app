@@ -1,0 +1,63 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build static Linux release
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rust-src
+      - name: Use stable as default
+        run: rustup default stable
+      - name: Add musl target
+        run: rustup target add x86_64-unknown-linux-musl
+
+      - name: Install bpf-linker
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zstd
+          curl -L --fail -o /tmp/bpf-linker.tar.zst \
+            https://github.com/aya-rs/bpf-linker/releases/download/v0.13.0/bpf-linker-x86_64-unknown-linux-musl.tar.zst
+          zstd -d -f /tmp/bpf-linker.tar.zst -o /tmp/bpf-linker.tar
+          mkdir -p "$HOME/.local/bin"
+          tar -xf /tmp/bpf-linker.tar -C "$HOME/.local/bin"
+          chmod +x "$HOME/.local/bin/bpf-linker"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Build static CLI and demo
+        env:
+          RUSTFLAGS: "-C linker=rust-lld -C link-self-contained=yes"
+        run: |
+          cargo build -p aya-app --release --target x86_64-unknown-linux-musl
+          cargo build -p aya-app-demo --release --target x86_64-unknown-linux-musl
+
+      - name: Package and checksum
+        run: |
+          mkdir -p dist
+          cp target/x86_64-unknown-linux-musl/release/aya-app dist/
+          cp target/x86_64-unknown-linux-musl/release/aya-app-demo dist/
+          strip dist/aya-app dist/aya-app-demo || true
+          (cd dist && sha256sum aya-app aya-app-demo > SHA256SUMS)
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/aya-app
+            dist/aya-app-demo
+            dist/SHA256SUMS
+          generate_release_notes: true
+          prerelease: ${{ contains(github.ref_name, 'rc') }}

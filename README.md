@@ -1,5 +1,8 @@
 # aya-app
 
+[![linux-system-tests](https://github.com/zhangmingze1913/aya-app/actions/workflows/ci.yml/badge.svg)](https://github.com/zhangmingze1913/aya-app/actions/workflows/ci.yml)
+[![license](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-MIT)
+
 基于 [Aya](https://aya-rs.dev/)（Rust eBPF 框架）的十一个场景实验项目：**XDP、TC、kprobe/kretprobe、uprobe/uretprobe、tracepoint、socket filter / SOCK_OPS、LSM、fentry/fexit、raw tracepoint、cgroup_skb、cgroup_sysctl**。
 
 项目不是“能加载就算成功”的玩具：每个场景都包含可配置策略、ring buffer 事件、per-CPU 统计、生命周期管理、中文使用文档和设计说明。代码同时面向两个编译目标：
@@ -557,6 +560,9 @@ cargo clippy -p aya-app \
 | [使用说明](USAGE.md) | **快速上手**：环境、构建、11 场景命令、验证、清理、常见问题 |
 | [关键代码参考](docs/code-reference.md) | 用户态/eBPF 关键函数、方法、调用链与扩展步骤 |
 | [GitHub 发布就绪评估](docs/release-readiness.md) | LICENSE、仓库元数据、CI、Release 检查清单 |
+| [更新日志](CHANGELOG.md) | 0.1.0 场景、修复与已知限制 |
+| [贡献指南](CONTRIBUTING.md) | 构建、测试、提交与新增场景流程 |
+| [安全策略](SECURITY.md) | 漏洞报告渠道与特权工具注意事项 |
 | [全场景使用说明](docs/usage.md) | **统一操作手册**：环境、十一个场景的逐项命令、预期输出、验证与清理 |
 | [设计文档](docs/design.md) | 架构、map/program 清单、数据流、构建链、并发与性能、扩展方式 |
 | [开发与验证](docs/development.md) | 工具链、构建、类型检查、verifier 调试、添加新场景、CI |
