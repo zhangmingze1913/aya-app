@@ -5,18 +5,28 @@
 
 ## 0. 结论
 
-**已达到并完成 `v0.1.0-rc.1` 发布；RC 资产和 Release workflow 均验证通过。**
+**`v0.1.0` 已正式发布，发布流程完成。**
 
-RC：
+- 正式 Release: <https://github.com/zhangmingze1913/aya-app/releases/tag/v0.1.0>
+- RC Release: <https://github.com/zhangmingze1913/aya-app/releases/tag/v0.1.0-rc.1>
+- Release workflow (v0.1.0): <https://github.com/zhangmingze1913/aya-app/actions/runs/45572017707>
+- tag CI (v0.1.0): <https://github.com/zhangmingze1913/aya-app/actions/runs/45572017769>
 
-- Release: <https://github.com/zhangmingze1913/aya-app/releases/tag/v0.1.0-rc.1>
-- 资产：`aya-app`、`aya-app-demo`、`SHA256SUMS`
-- Release workflow: <https://github.com/zhangmingze1913/aya-app/actions/runs/45570765284>
-- tag CI: <https://github.com/zhangmingze1913/aya-app/actions/runs/45570765258>
+## 1. 发布资产
 
-下一步是打正式 `v0.1.0`。
+| 资产 | 大小 | SHA-256（GitHub digest） |
+|---|---:|---|
+| `aya-app` | 3,864,672 B | `f88b5dd888bb97d3a2eea3883d32ef075aff2d1ce7a7ee48202036370f073325` |
+| `aya-app-demo` | 425,304 B | `d722c42fc2fda7c2a5db8c3e687b26a8bcd184fd152e71f3dc9621c44cbbfeaa` |
+| `SHA256SUMS` | 153 B | `25a887072ec67589b92e0633c69a30141793bd6e3381e08736cc1490a51fb5e5` |
 
-## 1. 验证证据
+RC 的 `aya-app` 已在 QEMU/Alpine 6.18 上验证：
+
+- `--version` → `aya-app 0.1.0`；
+- XDP `lo` ICMP drop；
+- kprobe openat 事件/延迟。
+
+## 2. 验证证据
 
 | 项目 | 状态 |
 |---|---|
@@ -25,16 +35,16 @@ RC：
 | `cargo test -p aya-app-common` | ✅ 3 passed |
 | `cargo +nightly check -p aya-app-ebpf --bins` | ✅ |
 | `cargo doc -p aya-app --no-deps` | ✅ |
-| 静态 musl CLI | ✅ 约 4.41 MB（release 资产 strip 后 3.86 MB） |
+| 静态 musl CLI | ✅ |
 | 11 个 eBPF object 嵌入 | ✅ |
 | Linux 运行时矩阵 | ✅ 6.1 / 6.6 / 6.18 |
 | GitHub Actions Ubuntu 22.04 | ✅ success |
 | GitHub Actions Ubuntu 24.04 | ✅ success |
-| Release workflow | ✅ success |
-| SHA256SUMS 校验 | ✅ 本地下载校验通过 |
-| RC 二进制 Linux 冒烟 | ✅ `--version` / XDP / kprobe |
+| Release workflow v0.1.0-rc.1 | ✅ success |
+| Release workflow v0.1.0 | ✅ success |
+| `SHA256SUMS` | ✅ RC 本地校验通过 |
 
-## 2. 发布文件
+## 3. 发布文件
 
 ```text
 LICENSE-MIT
@@ -49,37 +59,16 @@ SECURITY.md
 .github/PULL_REQUEST_TEMPLATE.md
 ```
 
-## 3. RC 资产
-
-```text
-aya-app        3,864,672 B
-aya-app-demo     425,304 B
-SHA256SUMS           153 B
-```
-
-`SHA256SUMS` 已在本地下载并核对 `aya-app` 哈希。
-
-## 4. 正式版发布
+## 4. 使用
 
 ```bash
-git tag -a v0.1.0 -m "aya-app 0.1.0"
-git push origin v0.1.0
+sudo ./aya-app --help
 ```
 
-Release workflow 会创建正式 Release；`contains(github.ref_name, 'rc')`
-对 `v0.1.0` 为 false，因此不是 prerelease。
+完整环境、构建和 11 场景命令见 [USAGE.md](../USAGE.md)；关键函数见
+[code-reference.md](code-reference.md)。
 
-## 5. 发布后验证
-
-```bash
-sha256sum -c SHA256SUMS
-./aya-app --version
-./aya-app --help
-```
-
-再按 [USAGE.md](../USAGE.md) 在目标 Linux 上做 XDP/kprobe/cgroup 冒烟。
-
-## 6. 后续 P2
+## 5. 后续 P2
 
 - CLI 集成测试（`--help`、参数校验、错误信息）；
 - `cargo audit` / `cargo deny`；
@@ -88,15 +77,16 @@ sha256sum -c SHA256SUMS
 - 特权 runner/netns 运行时 CI；
 - QEMU TCG 数据标注为非生产基准。
 
-## 7. 最终判断
+## 6. 最终判断
 
 ```text
 代码质量：      可发布
 文档完整度：    可发布
 CI 证据：       Linux 22.04/24.04 成功
 RC 发布：       成功
+正式发布：      v0.1.0 成功
 合规/元数据：   已补齐
-Release 自动化：已配置
+Release 自动化：已验证
 ```
 
-**当前状态：可以发布正式 `v0.1.0`。**
+**状态：已完成 GitHub 发布规划。**

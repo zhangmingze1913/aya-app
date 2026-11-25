@@ -2,6 +2,7 @@
 
 [![linux-system-tests](https://github.com/zhangmingze1913/aya-app/actions/workflows/ci.yml/badge.svg)](https://github.com/zhangmingze1913/aya-app/actions/workflows/ci.yml)
 [![license](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue.svg)](LICENSE-MIT)
+[![release](https://img.shields.io/github/v/release/zhangmingze1913/aya-app)](https://github.com/zhangmingze1913/aya-app/releases/latest)
 
 基于 [Aya](https://aya-rs.dev/)（Rust eBPF 框架）的十一个场景实验项目：**XDP、TC、kprobe/kretprobe、uprobe/uretprobe、tracepoint、socket filter / SOCK_OPS、LSM、fentry/fexit、raw tracepoint、cgroup_skb、cgroup_sysctl**。
 
