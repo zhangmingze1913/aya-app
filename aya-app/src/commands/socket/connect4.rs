@@ -104,7 +104,7 @@ pub(super) async fn run(args: Connect4Args) -> anyhow::Result<()> {
 }
 
 fn print_event(event: Connect4Event) {
-    println!(
+    crate::eventln!(
         "[connect4-deny] t={} pid={} comm={} dst={}:{}",
         uptime(event.timestamp_ns),
         event.pid,

@@ -120,7 +120,7 @@ fn read_stats(map: &PerCpuArray<MapData, CgSysctlStats>) -> anyhow::Result<CgSys
 }
 
 fn print_event(event: CgSysctlEvent) {
-    println!(
+    crate::eventln!(
         "[sysctl-deny] t={} pid={} tid={} comm={} uid={} write={}",
         uptime(event.timestamp_ns),
         event.tgid,

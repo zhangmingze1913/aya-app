@@ -46,6 +46,7 @@ where
                 result.context("failed to read ring buffer")?;
             }
             _ = ticker.tick() => {
+                crate::format::flush_events();
                 let total = read_stats(&stats)?;
                 print_stats(&total, &previous, interval_secs);
                 previous = total;
@@ -53,6 +54,7 @@ where
         }
     }
 
+    crate::format::flush_events();
     println!("\n正在 detach {detach} ...");
     Ok(())
 }

@@ -142,7 +142,7 @@ fn read_stats(map: &PerCpuArray<MapData, UprobeStats>) -> anyhow::Result<UprobeS
 
 fn print_event(event: UprobeEvent) {
     match event.kind {
-        UPROBE_KIND_ENTER => println!(
+        UPROBE_KIND_ENTER => crate::eventln!(
             "[enter] t={} pid={} tid={} comm={} request_id={} path={}",
             uptime(event.timestamp_ns),
             event.tgid,
@@ -151,7 +151,7 @@ fn print_event(event: UprobeEvent) {
             event.request_id,
             path(&event.path)
         ),
-        UPROBE_KIND_EXIT => println!(
+        UPROBE_KIND_EXIT => crate::eventln!(
             "[exit]  t={} pid={} tid={} comm={} {:<10} ret={}",
             uptime(event.timestamp_ns),
             event.tgid,
@@ -160,7 +160,7 @@ fn print_event(event: UprobeEvent) {
             duration_ns(event.latency_ns),
             event.ret
         ),
-        other => println!("[uprobe?] unknown kind={other}"),
+        other => crate::eventln!("[uprobe?] unknown kind={other}"),
     }
 }
 

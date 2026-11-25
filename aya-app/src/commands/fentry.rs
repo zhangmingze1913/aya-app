@@ -117,7 +117,7 @@ fn read_stats(map: &PerCpuArray<MapData, FentryStats>) -> anyhow::Result<FentryS
 }
 
 fn print_event(event: FentryEvent) {
-    println!(
+    crate::eventln!(
         "[fexit] t={} pid={} tid={} comm={} uid={} {:<10} ret={}",
         uptime(event.timestamp_ns),
         event.tgid,

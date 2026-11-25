@@ -136,7 +136,7 @@ fn print_event(event: XdpEvent) {
         XDP_DROP_RATE => "rate",
         _ => "unknown",
     };
-    println!(
+    crate::eventln!(
         "[drop] t={} {} -> {} len={} reason={}",
         uptime(event.timestamp_ns),
         ipv4(event.saddr),

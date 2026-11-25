@@ -140,7 +140,7 @@ fn read_stats(map: &PerCpuArray<MapData, KprobeStats>) -> anyhow::Result<KprobeS
 
 fn print_event(event: KprobeEvent) {
     match event.kind {
-        KPROBE_KIND_OPEN => println!(
+        KPROBE_KIND_OPEN => crate::eventln!(
             "[open]    t={} pid={} tid={} comm={} uid={} path={}",
             uptime(event.timestamp_ns),
             event.tgid,
@@ -149,7 +149,7 @@ fn print_event(event: KprobeEvent) {
             event.uid,
             path(&event.path)
         ),
-        KPROBE_KIND_LATENCY => println!(
+        KPROBE_KIND_LATENCY => crate::eventln!(
             "[latency] t={} pid={} tid={} comm={} {:<10} ret={}",
             uptime(event.timestamp_ns),
             event.tgid,
@@ -158,7 +158,7 @@ fn print_event(event: KprobeEvent) {
             duration_ns(event.latency_ns),
             event.ret
         ),
-        other => println!("[kprobe?] unknown kind={other}"),
+        other => crate::eventln!("[kprobe?] unknown kind={other}"),
     }
 }
 

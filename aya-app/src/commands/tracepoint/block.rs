@@ -33,7 +33,7 @@ pub(super) fn read_stats(
 
 fn print_event(event: BlockEvent) {
     let (major, minor) = decode_dev(event.dev);
-    println!(
+    crate::eventln!(
         "[block] t={} dev={}:{} sector={} bytes={} rwbs={} comm={}",
         uptime(event.timestamp_ns),
         major,

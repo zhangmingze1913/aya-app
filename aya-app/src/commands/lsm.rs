@@ -132,7 +132,7 @@ fn read_stats(map: &PerCpuArray<MapData, LsmStats>) -> anyhow::Result<LsmStats> 
 
 fn print_event(event: LsmEvent) {
     if event.action == LSM_ACTION_DENY {
-        println!(
+        crate::eventln!(
             "[lsm-deny] t={} pid={} uid={} comm={} dst={}:{}",
             uptime(event.timestamp_ns),
             event.pid,

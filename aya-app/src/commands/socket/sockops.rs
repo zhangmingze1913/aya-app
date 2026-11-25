@@ -112,7 +112,7 @@ fn sock_op_name(op: u32) -> &'static str {
 }
 
 fn print_event(event: SockOpsEvent) {
-    println!(
+    crate::eventln!(
         "[sockops] t={} op={:<20} pid={} comm={} {}:{} -> {}:{} srtt={} acked={} recv={} state={}",
         uptime(event.timestamp_ns),
         sock_op_name(event.op),

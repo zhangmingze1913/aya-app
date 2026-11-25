@@ -30,7 +30,7 @@ pub(super) fn read_stats(
 }
 
 fn print_event(event: SchedEvent) {
-    println!(
+    crate::eventln!(
         "[sched] t={} {}:{} [{}] -> {}:{} [{}] state={}",
         uptime(event.timestamp_ns),
         comm(&event.prev_comm),

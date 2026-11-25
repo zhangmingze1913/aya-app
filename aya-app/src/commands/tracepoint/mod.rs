@@ -14,7 +14,7 @@ use crate::{
     cli::{TraceEventArg, TracepointArgs},
     ebpf,
     event::EventStream,
-    format::banner,
+    format::{banner, flush_events},
     stats::take_percpu,
     tracefs,
 };
@@ -145,6 +145,7 @@ pub async fn run(args: TracepointArgs) -> anyhow::Result<()> {
                 result.context("failed to read tp_block_events ring buffer")?;
             }
             _ = ticker.tick() => {
+                flush_events();
                 if let Some(stats) = &sched_stats {
                     let total = sched::read_stats(stats)?;
                     sched::print_stats(&total, &previous_sched, args.stats_interval);
@@ -159,6 +160,7 @@ pub async fn run(args: TracepointArgs) -> anyhow::Result<()> {
         }
     }
 
+    flush_events();
     println!("\n正在 detach tracepoints ...");
     drop(bpf);
     println!("已退出。");

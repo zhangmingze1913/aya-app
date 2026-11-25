@@ -166,7 +166,7 @@ fn read_stats(map: &PerCpuArray<MapData, TcStats>) -> anyhow::Result<TcStats> {
 }
 
 fn print_event(event: TcEvent) {
-    println!(
+    crate::eventln!(
         "[tc-drop] t={} {}:{} -> {}:{} len={}",
         uptime(event.timestamp_ns),
         ipv4(event.saddr),

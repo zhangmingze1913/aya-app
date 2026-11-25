@@ -11,7 +11,7 @@ use tokio::net::TcpListener;
 use crate::{
     cli::SkFilterArgs,
     ebpf,
-    format::{self, banner, stats_header},
+    format::{self, banner, flush_events, stats_header},
     stats::{sum_percpu, take_percpu},
 };
 
@@ -103,12 +103,13 @@ pub(super) async fn run(args: SkFilterArgs) -> anyhow::Result<()> {
             }
             accepted = listener.accept() => {
                 let (stream, peer) = accepted.context("accept failed")?;
-                println!("[accept] peer={peer} (SYN passed the filter)");
+                crate::eventln!("[accept] peer={peer} (SYN passed the filter)");
                 // The demo does not speak HTTP; closing immediately is enough
                 // to show that the handshake completed.
                 drop(stream);
             }
             _ = ticker.tick() => {
+                flush_events();
                 let total = read_stats(&stats)?;
                 print_stats(&total, &previous, args.stats_interval);
                 previous = total;
@@ -116,6 +117,7 @@ pub(super) async fn run(args: SkFilterArgs) -> anyhow::Result<()> {
         }
     }
 
+    flush_events();
     println!("\n正在关闭监听 socket（socket filter 随之失效）...");
     drop(listener);
     drop(bpf);

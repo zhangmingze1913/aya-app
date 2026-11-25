@@ -6,7 +6,37 @@
 //! user-supplied addresses. Using `from_be` here would print every address
 //! byte-swapped on little-endian hosts.
 
-use std::net::Ipv4Addr;
+use std::{
+    fmt,
+    io::{self, BufWriter, Write},
+    net::Ipv4Addr,
+    sync::{Mutex, OnceLock},
+};
+
+fn event_out() -> &'static Mutex<BufWriter<io::Stdout>> {
+    static EVENT_OUT: OnceLock<Mutex<BufWriter<io::Stdout>>> = OnceLock::new();
+    EVENT_OUT.get_or_init(|| Mutex::new(BufWriter::new(io::stdout())))
+}
+
+/// Writes one event line to the buffered event stream.
+///
+/// A process-global buffer is used instead of a thread-local one because
+/// Tokio's multi-thread runtime may move an async task between workers at an
+/// await point; a thread-local buffer could then be flushed from a different
+/// thread than the one that filled it.
+pub fn event(args: fmt::Arguments<'_>) {
+    let out = event_out();
+    let mut out = out.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    let _ = out.write_fmt(args);
+    let _ = out.write_all(b"\n");
+}
+
+/// Flushes buffered events. Call before printing a stats block or detaching.
+pub fn flush_events() {
+    let out = event_out();
+    let mut out = out.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+    let _ = out.flush();
+}
 
 /// Formats a raw network-order IPv4 value (as stored in packet headers).
 pub fn ipv4(raw: u32) -> String {

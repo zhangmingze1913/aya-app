@@ -34,6 +34,15 @@ mod format;
 mod stats;
 mod tracefs;
 
+/// Writes one buffered event line. Use for per-event output only; stats and
+/// banners must go through normal `println!` after `format::flush_events()`.
+#[macro_export]
+macro_rules! eventln {
+    ($($arg:tt)*) => {
+        $crate::format::event(format_args!($($arg)*))
+    };
+}
+
 use clap::Parser;
 
 use crate::cli::{Cli, Command};

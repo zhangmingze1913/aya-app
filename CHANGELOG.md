@@ -15,6 +15,7 @@ All notable changes to this project are documented here.
 - Privileged runtime smoke script and self-hosted workflow.
 - cgroup_skb fast path: one 24-byte prefix read for IPv4 IHL=20, 4-byte
   L4 port fallback for options.
+- Buffered high-rate event output with deterministic flush before stats/detach.
 
 ## [0.1.0] - 2026-11-25
 

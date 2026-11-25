@@ -169,6 +169,19 @@ if every.is_power_of_two() {
 
 这是热路径微优化，不改变过滤语义或事件 ABI。
 
+### 3.7 高频事件输出缓冲
+
+`println!` 在高频 tracepoint/sockops 场景会逐行锁 stdout。现在：
+
+- `format::event` 使用进程级 `Mutex<BufWriter<Stdout>>`（避免 Tokio 多线程
+  task 迁移导致 thread-local 缓冲丢失）；
+- 事件打印统一走 `eventln!`；
+- `runner`、`skfilter`、`tracepoint` 在每个统计周期和 detach 前
+  `flush_events()`，保证事件与统计的顺序；
+- banner/统计仍用 `println!`，不会被打乱。
+
+这减少逐行写 syscall，同时避免把事件缓冲到进程退出而丢失。
+
 ## 4. 已完成的代码质量项
 
 ### 4.1 `socket` / `tracepoint` 拆分
@@ -188,6 +201,7 @@ if every.is_power_of_two() {
 - `sample` 已优化；
 - `cgroup_skb` 已改为单次 IPv4+端口前缀读取；进一步 direct packet access
   仍受 Aya `SkBuffContext` 安全 API 限制；
+- 高频事件已使用 `BufWriter`；剩余可做的是按速率动态调整 flush 周期；
 - 高频事件打印可改 `BufWriter`/批量输出；
 - Linux 运行时绝对时间仍以目标硬件为准。
 

@@ -111,7 +111,7 @@ fn read_stats(map: &PerCpuArray<MapData, RawTpStats>) -> anyhow::Result<RawTpSta
 }
 
 fn print_event(event: RawTpEvent) {
-    println!(
+    crate::eventln!(
         "[sys_enter] t={} pid={} tid={} comm={} uid={} nr={}",
         uptime(event.timestamp_ns),
         event.tgid,

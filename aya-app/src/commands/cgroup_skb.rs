@@ -124,7 +124,7 @@ fn read_stats(map: &PerCpuArray<MapData, CgSkbStats>) -> anyhow::Result<CgSkbSta
 }
 
 fn print_event(event: CgSkbEvent) {
-    println!(
+    crate::eventln!(
         "[cgroup-skb drop] t={} pid={} tid={} comm={} {}:{} -> {}:{} len={}",
         uptime(event.timestamp_ns),
         event.tgid,

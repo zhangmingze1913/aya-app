@@ -95,6 +95,7 @@ eBPF 侧所有统计都是 per-CPU，用户态求和得到精确总量；热路�
 | `bytes(u64) -> String` | 字节数格式化 |
 | `uptime(u64) -> String` | `bpf_ktime_get_ns` → 相对秒 |
 | `banner/stats_header` | CLI 输出标题 |
+| `eventln!` / `event` / `flush_events` | 高频事件缓冲输出与刷新 |
 
 ### 2.6 `aya-app/src/tracefs.rs`
 
