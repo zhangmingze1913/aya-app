@@ -80,6 +80,9 @@ bytes : pass=0 B  drop=60 B
 > 兼容性：Linux 6.6 的 cgroup_skb helper allowlist 不包含
 > `bpf_get_current_pid_tgid` / `bpf_get_current_comm`，因此事件的 `pid`/`tgid`/`comm`
 > 固定为 0/空；地址、端口、长度和统计仍然准确。Linux 6.18 同样使用这一兼容形式。
+>
+> 性能：`IHL=20` 时一次读取 24 字节 IPv4+端口前缀；带 IPv4 options 时才回退到
+> 4 字节端口读取，避免每次复制完整 TCP 头。
 
 ## 6. 参数
 

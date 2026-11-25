@@ -12,7 +12,7 @@ use aya_ebpf::{
 };
 
 use crate::{
-    net::{ETH_P_IP, IPPROTO_TCP, IPPROTO_UDP, Ipv4Hdr, TcpHdr, UdpHdr},
+    net::{ETH_P_IP, IPPROTO_TCP, IPPROTO_UDP, Ipv4Ports, L4Ports},
     utils::{cpu_stats, now_ns, sample},
 };
 
@@ -43,8 +43,11 @@ fn handle(ctx: &SkBuffContext) -> Result<i32, ()> {
         return Ok(0);
     }
 
-    // cgroup_skb data starts at the IPv4 header.
-    let ip: Ipv4Hdr = ctx.load(0).map_err(|_| ())?;
+    // cgroup_skb data starts at the IPv4 header. Read the IPv4 prefix and the
+    // first four L4 bytes together: for the common IHL == 20 packet this is a
+    // single helper call instead of separate IP/TCP/UDP loads.
+    let header: Ipv4Ports = ctx.load(0).map_err(|_| ())?;
+    let ip = header.ip;
     if ip.ver_ihl >> 4 != 4 {
         count_passed(ctx);
         return Ok(0);
@@ -55,20 +58,20 @@ fn handle(ctx: &SkBuffContext) -> Result<i32, ()> {
         return Ok(0);
     }
 
-    let (sport, dport) = match ip.protocol {
-        IPPROTO_TCP => {
-            let tcp: TcpHdr = ctx.load(ihl).map_err(|_| ())?;
-            (tcp.source(), tcp.dest())
-        }
-        IPPROTO_UDP => {
-            let udp: UdpHdr = ctx.load(ihl).map_err(|_| ())?;
-            (udp.source(), udp.dest())
+    let ports = match ip.protocol {
+        IPPROTO_TCP | IPPROTO_UDP => {
+            if ihl == 20 {
+                header.ports
+            } else {
+                ctx.load::<L4Ports>(ihl).map_err(|_| ())?
+            }
         }
         _ => {
             count_passed(ctx);
             return Ok(0);
         }
     };
+    let (sport, dport) = (ports.source(), ports.dest());
 
     if cfg.block_port != 0 && dport == cfg.block_port {
         if let Some(stats) = cpu_stats(&CGSKB_STATS) {

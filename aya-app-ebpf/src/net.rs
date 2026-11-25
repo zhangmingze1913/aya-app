@@ -130,6 +130,40 @@ impl UdpHdr {
     }
 }
 
+/// The first four bytes shared by TCP, UDP and other L4 headers: ports.
+///
+/// `cgroup_skb` only needs the ports, so loading this 4-byte struct avoids
+/// copying a full TCP header (20 bytes) on every packet.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct L4Ports {
+    pub sport: u16,
+    pub dport: u16,
+}
+
+impl L4Ports {
+    #[inline(always)]
+    pub fn source(&self) -> u16 {
+        u16::from_be(self.sport)
+    }
+
+    #[inline(always)]
+    pub fn dest(&self) -> u16 {
+        u16::from_be(self.dport)
+    }
+}
+
+/// IPv4 header plus the first four L4 bytes in one helper read.
+///
+/// The common IPv4 case (IHL == 20) needs only one `bpf_skb_load_bytes` call:
+/// both the addresses and the ports are available in this 24-byte prefix.
+#[repr(C)]
+#[derive(Clone, Copy)]
+pub struct Ipv4Ports {
+    pub ip: Ipv4Hdr,
+    pub ports: L4Ports,
+}
+
 #[repr(C)]
 #[derive(Clone, Copy)]
 pub struct IcmpHdr {

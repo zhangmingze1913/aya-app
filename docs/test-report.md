@@ -43,6 +43,8 @@ cargo build -p aya-app-demo --release --target x86_64-unknown-linux-musl
 
 ### 3.0 内核兼容性矩阵
 
+> cgroup_skb 已增加单次 IPv4+端口前缀读取（IHL=20），6.18 复测 drop/事件正常。
+
 | 场景 | 6.18.35 LTS | 6.6.31 LTS | 6.1.27 LTS |
 |---|---|---|---|
 | XDP | ✅ | ✅ | ✅ |

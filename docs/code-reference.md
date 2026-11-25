@@ -183,7 +183,9 @@ pub fn path_matches_prefixes(path: &[u8; PATH_LEN], prefixes: &[[u8; PREFIX_LEN]
 | `EthHdr` | 以太网头，含 VLAN 判断 |
 | `VlanHdr` | 802.1Q |
 | `Ipv4Hdr` | IHL、protocol、分片检查 |
-| `TcpHdr` / `UdpHdr` | 端口 |
+| `TcpHdr` / `UdpHdr` | 端口、TCP 标志 |
+| `L4Ports` | 仅 TCP/UDP 端口（4 字节，cgroup_skb 快路径） |
+| `Ipv4Ports` | IPv4 + 端口一次读取（24 字节） |
 | `IcmpHdr` | type/code |
 
 所有直接包访问都先做 `data..data_end` 边界检查；XDP 使用 `read_packet`，

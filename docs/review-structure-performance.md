@@ -154,6 +154,21 @@ if every.is_power_of_two() {
 
 这既减少重复代码，也把“旧内核 verifier 栈限制”的兼容性修复集中到一处。
 
+### 3.6 cgroup_skb 单次头部读取
+
+`cgroup_skb` 原来先 `load::<Ipv4Hdr>(0)` 再 `load::<TcpHdr/UdpHdr>(ihl)`：
+
+- 第一次 20 字节；
+- TCP 情况第二次复制完整 20 字节 TCP 头，而只用到 4 字节端口。
+
+现在 `net.rs` 增加 `L4Ports`（4 字节）和 `Ipv4Ports`（IPv4 20 + ports 4）：
+
+- 常见 `IHL == 20`：一次 24 字节 helper 读取，拿到地址和端口；
+- `IHL > 20`：回退到 `load::<L4Ports>(ihl)`，只复制 4 字节；
+- 减少一次 helper 调用和 TCP 头复制，栈占用也更小。
+
+这是热路径微优化，不改变过滤语义或事件 ABI。
+
 ## 4. 已完成的代码质量项
 
 ### 4.1 `socket` / `tracepoint` 拆分
@@ -171,7 +186,8 @@ if every.is_power_of_two() {
 ## 5. 剩余热路径优化
 
 - `sample` 已优化；
-- `cgroup_skb` 仍是两次 `bpf_skb_load_bytes`，确认 skb 线性后可改 direct access；
+- `cgroup_skb` 已改为单次 IPv4+端口前缀读取；进一步 direct packet access
+  仍受 Aya `SkBuffContext` 安全 API 限制；
 - 高频事件打印可改 `BufWriter`/批量输出；
 - Linux 运行时绝对时间仍以目标硬件为准。
 
