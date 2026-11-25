@@ -334,6 +334,9 @@ Linux 多版本/多内核矩阵由 `.github/workflows/ci.yml` 执行；eBPF 运�
 ## 8. 文档索引
 
 - [关键代码参考](docs/code-reference.md)
+- [架构兼容性](docs/architectures.md)
+- [特权运行时测试](docs/runtime-testing.md)
+- [安装脚本](scripts/install.sh)
 - [全场景详解](docs/usage.md)
 - [设计文档](docs/design.md)
 - [开发与验证](docs/development.md)

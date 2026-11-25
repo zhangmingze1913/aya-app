@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented here.
 
+## [Unreleased]
+
+### Added
+
+- CLI integration tests for help/version and early argument validation.
+- `scripts/install.sh` with SHA-256 verification.
+- `deny.toml` for `cargo deny`.
+- Non-x86_64 architecture notes.
+- Privileged runtime smoke script and self-hosted workflow.
+
 ## [0.1.0] - 2026-11-25
 
 ### Added

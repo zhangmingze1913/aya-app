@@ -1,0 +1,46 @@
+name: privileged-runtime
+
+# Manual-only: requires a self-hosted Linux runner with eBPF permissions.
+# Do not run this on a shared/production host without a disposable VM or netns.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  runtime:
+    name: Privileged eBPF runtime smoke
+    runs-on: [self-hosted, linux, x64, ebpf]
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show environment
+        run: |
+          cat /etc/os-release
+          uname -a
+          test -e /sys/kernel/btf/vmlinux
+
+      - name: Install bpf-linker
+        run: |
+          if command -v bpf-linker >/dev/null 2>&1; then
+            bpf-linker --version
+            exit 0
+          fi
+          sudo apt-get update
+          sudo apt-get install -y zstd
+          curl -L --fail -o /tmp/bpf-linker.tar.zst \
+            https://github.com/aya-rs/bpf-linker/releases/download/v0.13.0/bpf-linker-x86_64-unknown-linux-musl.tar.zst
+          zstd -d -f /tmp/bpf-linker.tar.zst -o /tmp/bpf-linker.tar
+          sudo tar -xf /tmp/bpf-linker.tar -C /usr/local/bin
+          sudo chmod +x /usr/local/bin/bpf-linker
+
+      - name: Build release CLI
+        run: |
+          cargo build -p aya-app --release
+
+      - name: Run privileged runtime smoke
+        env:
+          AYA_APP: ./target/release/aya-app
+        run: sudo -E bash scripts/test-linux-runtime.sh

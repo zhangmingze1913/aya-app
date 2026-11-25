@@ -70,12 +70,21 @@ sudo ./aya-app --help
 
 ## 5. 后续 P2
 
-- CLI 集成测试（`--help`、参数校验、错误信息）；
-- `cargo audit` / `cargo deny`；
-- Release 安装脚本；
-- 非 x86_64 架构说明；
-- 特权 runner/netns 运行时 CI；
-- QEMU TCG 数据标注为非生产基准。
+本轮已补充：
+
+- CLI 集成测试：`aya-app/tests/cli.rs`；
+- `deny.toml` + `cargo deny check` 使用说明；
+- Release 安装脚本：`scripts/install.sh`；
+- 非 x86_64 说明：`docs/architectures.md`；
+- 特权运行时入口：`scripts/test-linux-runtime.sh` + `runtime.yml`；
+- QEMU TCG 数据已标注为非生产基准。
+
+仍可继续：
+
+- `cargo audit` / `cargo deny` 纳入托管 CI；
+- Release 安装脚本的更多平台/包管理器支持；
+- 非 x86_64 实机验证；
+- 特权 runner/netns 的自动化矩阵。
 
 ## 6. 最终判断
 

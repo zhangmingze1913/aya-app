@@ -1,0 +1,37 @@
+# cargo-deny configuration.
+#
+# Run:
+#   cargo install cargo-deny
+#   cargo deny check
+#
+# This project is a Linux eBPF toolkit; license policy is intentionally broad
+# enough for the Rust crates used by Aya/Tokio/clap.
+
+[graph]
+all-features = true
+
+[advisories]
+yanked = "deny"
+
+[licenses]
+allow = [
+  "MIT",
+  "Apache-2.0",
+  "BSD-2-Clause",
+  "BSD-3-Clause",
+  "ISC",
+  "Unicode-3.0",
+  "Zlib",
+  "MPL-2.0",
+  "CC0-1.0",
+  "Unlicense",
+]
+
+[bans]
+multiple-versions = "warn"
+# Workspace path dependencies use `*`; a hard deny would flag them.
+wildcards = "warn"
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"

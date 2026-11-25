@@ -1,8 +1,8 @@
 //! Command-line interface.
 //!
 //! The CLI mirrors the eleven scenario modules one-to-one. Every command loads
-//! the same BPF object and only attaches the programs it needs; the object is
-//! shared so all programs and maps are visible to `bpftool` in one place.
+//! its own scenario-scoped eBPF object; the object contains only the programs
+//! and maps used by that command.
 //!
 //! Defaults are chosen to be safe and useful in a lab:
 //!

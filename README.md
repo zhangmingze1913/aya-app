@@ -498,7 +498,7 @@ aya-app cgroup-sysctl
 
 | 系统 | 命令 | 内容 |
 |---|---|---|
-| Linux | `bash scripts/test-linux.sh` | fmt、ABI 测试、用户态单测、clippy、全部 eBPF feature 检查 |
+| Linux | `bash scripts/test-linux.sh` | fmt、ABI 测试、用户态单测、clippy、全部 eBPF bin 检查 |
 | Linux（完整构建） | `FULL_BUILD=1 bash scripts/test-linux.sh` | 额外构建 11 个 eBPF object + CLI |
 | Linux（运行时冒烟） | `sudo -E RUN_RUNTIME=1 FULL_BUILD=1 bash scripts/test-linux.sh` | 额外在 `lo` 上跑 XDP 冒烟 |
 | CI | `.github/workflows/ci.yml` | Linux 多版本/多内核矩阵 |
@@ -581,7 +581,10 @@ cargo clippy -p aya-app \
 | [cgroup_sysctl 案例](docs/scenarios/11-cgroup-sysctl.md) | 阻止 cgroup 写 sysctl、返回值语义 |
 | [Aya 缺口分析](docs/aya-gaps.md) | Aya 0.16 没有封装的 netfilter/struct_ops/tcx 等，以及后续候选 |
 | [结构与性能评估](docs/review-structure-performance.md) | map/内存实测、启动成本、共享 ring/start map 建议与优先级 |
-| [Linux 系统测试](scripts/test-linux.sh) | fmt、ABI、单元测试、clippy、全部 eBPF feature、可选完整构建 |
+| [Linux 系统测试](scripts/test-linux.sh) | fmt、ABI、单元测试、clippy、全部 eBPF bin、可选完整构建 |
+| [架构兼容性](docs/architectures.md) | x86_64 已验证，aarch64/非 4K 页等注意事项 |
+| [特权运行时测试](docs/runtime-testing.md) | 一次性 VM/netns、自托管 runner 与安全边界 |
+| [安装脚本](scripts/install.sh) | 下载 Release 资产、校验 SHA-256 并安装 |
 | [Linux 实测报告](docs/test-report.md) | QEMU + Alpine 上的多场景运行结果、发现的问题与修复、未覆盖项 |
 
 ---

@@ -24,6 +24,8 @@ RUSTC_BOOTSTRAP=1 cargo +nightly check -p aya-app-ebpf \
     --bins --target bpfel-unknown-none -Z build-std=core
 cargo test -p aya-app-common
 cargo clippy -p aya-app --all-targets --target x86_64-unknown-linux-gnu -- -D warnings
+cargo install cargo-deny
+cargo deny check
 ```
 
 On Linux:
